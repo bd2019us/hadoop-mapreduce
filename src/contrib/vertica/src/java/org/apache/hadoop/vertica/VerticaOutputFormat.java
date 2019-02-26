@@ -207,10 +207,12 @@ public class VerticaOutputFormat extends OutputFormat<Text, VerticaRecord> {
       // poll for refresh complete
       boolean refreshing = true;
       Long timeout = vtconfig.getOptimizePollTimeout();
+	  PreparedStatement prepareStmt = conn.prepareStatement("select table_name, status from vt_projection_refresh");
       while (refreshing) {
         refreshing = false;
-        rs = stmt
-            .executeQuery("select table_name, status from vt_projection_refresh");
+        //rs = stmt
+        //    .executeQuery("select table_name, status from vt_projection_refresh");
+		rs = prepareStmt.executeQuery();
         while (rs.next()) {
           String table = rs.getString(1);
           String stat = rs.getString(2);
